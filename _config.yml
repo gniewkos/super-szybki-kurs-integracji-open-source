@@ -1,0 +1,40 @@
+# Site settings
+title: 4Developers 2015 
+email: ssztank@pl.sii.eu
+url: http://gniewkos.github.io/super-szybki-kurs-integracji-open-source
+description: "Super szybki kurs integracji open source z Apache Camel i ServiceMix"
+
+# Contact form: comment the line below if you want to stick with the default PHP contact form
+contact: static
+
+# Color settings (hex-codes without the leading hash-tag)
+color:
+  primary: 0FACCF #80B3FF
+  secondary: 2C363E #FD6E8A
+  secondary-dark: 222222 #A2122F
+
+# Footer settings
+footer:
+  copyright: Creative Commons BY
+  location: Lokalizacja
+  social: O mnie
+  credits: Podziękowania
+
+# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
+social:
+  - title: twitter
+    url: http://twitter.com/gniewkos
+  - title: github
+    url: http://github.com/gniewkos
+
+# Postal address (add as many lines as necessary)
+address:
+  - line: Gromada Hotel Airport
+  - line: Warszawa, 20 kwietnia
+
+# Credits content
+credits: 'Bardzo pozytwnej firmie <a target="_blank" href="http://kariera.sii.pl/">@Sii_Polska</a>, w której pracuje. <a href="http://startbootstrap.com">Start Bootstrap</a> za darmowy szablon strony.'
+
+# Build settings
+markdown: kramdown
+permalink: pretty
