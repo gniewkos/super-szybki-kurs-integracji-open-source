@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+
+        <route>
+            <from uri="timer://foo?fixedRate=true&amp;period=10s"/>
+            <to uri="direct:setMailchimpHeaders"/>
+            <to uri="language:constant:classpath:request.json"/>
+            <to uri="https4://us10.api.mailchimp.com/2.0/lists/members"/>
+            <split>
+                <jsonpath>$.data</jsonpath>
+                <to uri="direct:setElasticsearchHeaders"/>
+                <to uri="http4://localhost:9200"/>
+            </split>
+            <to uri="direct:log"/>
+        </route>
+
+        <route>
+            <from uri="direct:setMailchimpHeaders"/>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader headerName="Content-Type">
+                <constant>application/json; charset=UTF-8</constant>
+            </setHeader>
+            <setHeader headerName="CamelHttpCharacterEncoding">
+                <constant>UTF-8</constant>
+            </setHeader>
+        </route>
+
+        <route>
+            <from uri="direct:setElasticsearchHeaders"/>
+            <removeHeaders pattern="*"/>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader headerName="Content-Type">
+                <constant>application/json; charset=UTF-8</constant>
+            </setHeader>
+            <setHeader headerName="CamelHttpCharacterEncoding">
+                <constant>UTF-8</constant>
+            </setHeader>
+            <setHeader headerName="member-id">
+                <jsonpath>$.id</jsonpath>
+            </setHeader>
+            <setHeader headerName="CamelHttpPath">
+                <simple>/mailchimp/member/${headers[member-id]}</simple>
+            </setHeader>
+            <convertBodyTo type="java.lang.String"/>
+        </route>
+
+        <route>
+            <from uri="direct:log"/>
+            <log message="Mailchimp members updated."/>
+        </route>
+
+    </camelContext>
+
+</blueprint>
